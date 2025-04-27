@@ -7,33 +7,52 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 public class RuntimeEnvironment {
 
-    @NotNull
-    @Setter @Getter
-    private Path cmpDir;
+    private final Logger logger = Logger.getLogger(RuntimeEnvironment.class.getName());
+
+    @NotNull @Getter
+    private final Path compDir;
 
     private HashMap<String, Component> components = new HashMap<>();
 
-    public RuntimeEnvironment() {
-        this("cmps");
-    }
+    @Getter
+    private boolean running = false;
 
-    public RuntimeEnvironment(String cmpDir) {
-        Path cmpPath = Paths.get(cmpDir);
+    public RuntimeEnvironment(String compDir) {
+        Path cmpPath = Paths.get(compDir);
         if (!cmpPath.toFile().isDirectory()){
-            throw new IllegalArgumentException(cmpDir + " is not a directory");
+            throw new IllegalArgumentException(compDir + " is not a directory");
         }
-        this.cmpDir = cmpPath;
+        this.compDir = cmpPath;
     }
 
     public void start(){
+        if (isRunning()){
+            logger.severe("RuntimeEnvironment is already running.");
+            return;
+        }
+        Arrays.stream(Objects.requireNonNull(compDir.toFile().listFiles()))
+                .filter(file -> file.getName().endsWith(".jar")).forEach(file -> {
+            Component component = new Component(file);
+            components.put(component.getName(), component);
+        });
 
+        running = true;
     }
 
     public void shutdown(){
+        if (!isRunning()){
+            logger.severe("RuntimeEnvironment is not running.");
+            return;
+        }
 
+        running = false;
+        components.clear();
     }
 }

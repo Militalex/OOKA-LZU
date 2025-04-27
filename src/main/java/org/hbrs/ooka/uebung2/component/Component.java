@@ -2,11 +2,12 @@ package org.hbrs.ooka.uebung2.component;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
+import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 
 public class Component {
 
@@ -18,16 +19,20 @@ public class Component {
     @Getter
     private final String name;
 
-    @Nullable @Getter
+    private final JarFile jarFile;
     private final ClassLoader classLoader;
 
     private ComponentState componentState;
 
     @SneakyThrows
-    public Component(Path jarFile){
-        this.id = next_id++;
-        this.name = jarFile.toString(); // Check
-        this.classLoader = new URLClassLoader(new URL[]{jarFile.toUri().toURL()});
+    public Component(File jarFile){
+        if (!jarFile.getName().endsWith(".jar")){
+            throw new IllegalArgumentException(jarFile.getName() + " is not a jar file.");
+        }
 
+        this.id = next_id++;
+        this.name = jarFile.getName().substring(0, jarFile.getName().length() - 4);
+        this.jarFile = new JarFile(jarFile, false, ZipFile.OPEN_READ, Runtime.version());
+        this.classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
     }
 }
