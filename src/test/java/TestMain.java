@@ -3,20 +3,26 @@ import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
 import java.lang.reflect.InvocationTargetException;
 
 public class TestMain {
-    public static void main(String[] args) throws InterruptedException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws InterruptedException {
         RuntimeEnvironment re = new RuntimeEnvironment("comps");
         re.start();
 
-        re.getComponents().get("ProduktManagement Komponente").deploy(re);
-        re.getComponents().get("ProduktManagement Client Simulation Komponente").deploy(re);
+        re.listComponents();
 
-        re.getComponents().get("ProduktManagement Komponente").start();
-        re.getComponents().get("ProduktManagement Client Simulation Komponente").start();
+        re.deployComponentById(1);
+        re.deployComponentById(0);
+        re.deployComponentById(0);
 
-        Thread.sleep(1000);
+        re.listComponents();
 
-        re.getComponents().get("ProduktManagement Client Simulation Komponente").stop();
-        re.getComponents().get("ProduktManagement Komponente").stop();
+        re.startComponentById(1);
+        re.startComponentById(0);
+
+        Thread.sleep(500);
+
+        re.listComponents();
+
+        Thread.sleep(1500);
 
         re.shutdown();
     }

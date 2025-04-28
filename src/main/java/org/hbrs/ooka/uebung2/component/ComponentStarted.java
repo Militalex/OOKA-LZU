@@ -1,28 +1,20 @@
 package org.hbrs.ooka.uebung2.component;
 
-public class ComponentStarted extends ComponentState {
-    @Override
-    public void deploy() {
+import java.lang.reflect.Method;
 
+public class ComponentStarted extends AbstractComponentState {
+
+    @Override
+    public void stop(Component component) throws Exception {
+        Method stopMethod = component.getStopMethod();
+        if (stopMethod != null) {
+            stopMethod.setAccessible(true);
+            stopMethod.invoke(null);
+        }
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public String getState() {
-        return null;
+    public ComponentState getState() {
+        return ComponentState.STARTED;
     }
 }

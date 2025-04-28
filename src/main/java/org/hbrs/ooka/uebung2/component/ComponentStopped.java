@@ -1,28 +1,14 @@
 package org.hbrs.ooka.uebung2.component;
 
-public class ComponentStopped extends ComponentState {
-    @Override
-    public void deploy() {
+public class ComponentStopped extends AbstractComponentState {
 
+    @Override
+    public void delete(Component component) {
+        component.setComponentState(new ComponentDeleted());
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public String getState() {
-        return null;
+    public ComponentState getState() {
+        return ComponentState.STOPPED;
     }
 }
