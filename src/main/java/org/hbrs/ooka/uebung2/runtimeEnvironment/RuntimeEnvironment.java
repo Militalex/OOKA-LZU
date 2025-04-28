@@ -1,7 +1,6 @@
-package org.hbrs.ooka.uebung2;
+package org.hbrs.ooka.uebung2.runtimeEnvironment;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.hbrs.ooka.uebung2.component.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,11 +13,15 @@ import java.util.logging.Logger;
 
 public class RuntimeEnvironment {
 
-    private final Logger logger = Logger.getLogger(RuntimeEnvironment.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(RuntimeEnvironment.class.getName());
 
-    @NotNull @Getter
+    @Getter
+    private final RuntimeEnvironmentAPI api = new RuntimeEnvironmentAPI();
+
+    @NotNull
     private final Path compDir;
 
+    @Getter
     private HashMap<String, Component> components = new HashMap<>();
 
     @Getter
@@ -33,8 +36,9 @@ public class RuntimeEnvironment {
     }
 
     public void start(){
+        LOGGER.info("Starte Laufzeitumgebung ...");
         if (isRunning()){
-            logger.severe("RuntimeEnvironment is already running.");
+            LOGGER.severe("Laufzeitumgebung ist bereits gestartet.");
             return;
         }
         Arrays.stream(Objects.requireNonNull(compDir.toFile().listFiles()))
@@ -44,15 +48,18 @@ public class RuntimeEnvironment {
         });
 
         running = true;
+        LOGGER.info("- - - Laufzeitumgebung erfolgreich gestartet - - -");
     }
 
     public void shutdown(){
+        LOGGER.info("Fahre Laufzeitumgang herunter ...");
         if (!isRunning()){
-            logger.severe("RuntimeEnvironment is not running.");
+            LOGGER.severe("Laufzeitumgebung ist bereits beendet.");
             return;
         }
 
         running = false;
         components.clear();
+        LOGGER.info("- - - Laufzeitumgebung erfolgreich heruntergefahren - - -");
     }
 }

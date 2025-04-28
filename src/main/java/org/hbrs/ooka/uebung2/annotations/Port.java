@@ -5,9 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = ElementType.METHOD)
-public @interface Stop {
+@Target(value = ElementType.TYPE)
+public @interface Port {
 }

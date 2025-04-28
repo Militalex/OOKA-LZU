@@ -1,6 +1,6 @@
 package org.hbrs.ooka.uebung2.component;
 
-public class ComponentLoaded extends ComponentState{
+public class ComponentDeployed extends ComponentState {
     @Override
     public void deploy() {
 

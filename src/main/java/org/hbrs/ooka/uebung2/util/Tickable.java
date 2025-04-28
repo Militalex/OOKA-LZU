@@ -1,4 +1,4 @@
-package com.github.militalex.util;
+package org.hbrs.ooka.uebung2.util;
 
 import java.util.Timer;
 import java.util.TimerTask;
