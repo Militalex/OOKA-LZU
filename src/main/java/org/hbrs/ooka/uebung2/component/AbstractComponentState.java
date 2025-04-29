@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 
 public abstract class AbstractComponentState {
-    public @Nullable Method[] deploy(Component component, RuntimeEnvironment re) throws Exception{
+    public @Nullable Method[] deploy(Component component, RuntimeEnvironment re, int id) throws Exception{
         throw new ComponentStateUnsuportedOperationException("Deploying is not supported in State " + getState());
     }
 
@@ -21,8 +21,6 @@ public abstract class AbstractComponentState {
     public void delete(Component component) {
         throw new ComponentStateUnsuportedOperationException("Deleting is not supported in State " + getState());
     }
-
-    public abstract @Nullable Method[] deploy(Component component, RuntimeEnvironment re, int id) throws Exception;
 
     public abstract ComponentState getState();
 }

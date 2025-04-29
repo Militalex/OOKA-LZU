@@ -4,18 +4,17 @@ import lombok.Getter;
 import org.hbrs.ooka.uebung2.component.Component;
 import org.hbrs.ooka.uebung2.component.ComponentState;
 import org.hbrs.ooka.uebung2.services.logger.RuntimeEnvironmentLogger;
-import org.hbrs.ooka.uebung2.util.LoggerUtil;
 import org.hbrs.ooka.uebung3.loggerService.ILogger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RuntimeEnvironment {
     public static final ILogger LOGGER = new RuntimeEnvironmentLogger();
@@ -30,7 +29,7 @@ public class RuntimeEnvironment {
     private HashMap<Integer, Component> components = new HashMap<>();
 
     @Getter
-    private int nextId = 1;
+    private int nextId = 0;
     @Getter
     private boolean running = false;
 
@@ -92,7 +91,7 @@ public class RuntimeEnvironment {
 
     // Folgende Methoden geben zurück, ob sie erfolgreich waren oder nicht
     public boolean deployComponentById(int id){
-        if (id < 0 || id >= components.size()){
+        if (components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -121,7 +120,7 @@ public class RuntimeEnvironment {
     }
 
     public boolean startComponentById(int id){
-        if (id < 0 || id >= components.size()){
+        if (components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -152,16 +151,17 @@ public class RuntimeEnvironment {
             LOGGER.warning("Die Laufzeitumgebung hat keine Komponenten.");
             return;
         }
-        for (int i = 0; i < components.size(); i++){
-            Component component = components.get(i);
-            builder.append("ID: ").append(i).append(", Name: ").append(component.getName()).append(", Zustand: ").append(component.getState());
-            if (i < components.size() - 1) builder.append("\n");
+        for (int id : components.keySet()){
+            Component component = components.get(id);
+            builder.append("ID: ").append(id).append(", Name: ").append(component.getName()).append(", Zustand: ").append(component.getState());
+            builder.append("\n");
         }
-        LOGGER.info("Die Laufzeitumgebung hat folgende Komponenten: \n" + builder);
+
+        LOGGER.info("Die Laufzeitumgebung hat folgende Komponenten: \n" + builder.substring(0, builder.length()-1));
     }
 
     public boolean stopComponentById(int id){
-        if (id < 0 || id >= components.size()){
+        if (components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -179,7 +179,7 @@ public class RuntimeEnvironment {
     }
 
     public boolean deleteComponentById(int id){
-        if (id < 0 || id >= components.size()){
+        if (components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
