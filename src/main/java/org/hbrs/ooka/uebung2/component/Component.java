@@ -29,7 +29,7 @@ public class Component {
     private final String name;
     @NotNull
     protected final File jarFile;
-    @NotNull
+    @NotNull @Getter
     protected final ClassLoader classLoader;
     @Nullable
     protected Method startMethod;

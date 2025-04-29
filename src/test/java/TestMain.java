@@ -1,7 +1,5 @@
 import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class TestMain {
     public static void main(String[] args) throws InterruptedException {
         RuntimeEnvironment re = new RuntimeEnvironment("comps");
@@ -22,7 +20,7 @@ public class TestMain {
 
         re.listComponents();
 
-        Thread.sleep(1500);
+        Thread.sleep(5000);
 
         re.shutdown();
     }
