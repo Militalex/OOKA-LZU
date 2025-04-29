@@ -3,7 +3,9 @@ package org.hbrs.ooka.uebung2.runtimeEnvironment;
 import lombok.Getter;
 import org.hbrs.ooka.uebung2.component.Component;
 import org.hbrs.ooka.uebung2.component.ComponentState;
+import org.hbrs.ooka.uebung2.services.logger.RuntimeEnvironmentLogger;
 import org.hbrs.ooka.uebung2.util.LoggerUtil;
+import org.hbrs.ooka.uebung3.loggerService.ILogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -11,24 +13,24 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RuntimeEnvironment {
-    public static final Logger LOGGER = LoggerUtil.getLogger(RuntimeEnvironment.class);
+    public static final ILogger LOGGER = new RuntimeEnvironmentLogger();
     @Getter
     private final RuntimeEnvironmentAPI api = new RuntimeEnvironmentAPI();
     @NotNull
     private final Path compDir;
 
     /**
-     * Die Laufende Identifikationsnummer ergibt sich als die Position in der ArrayList.
+     * Die laufende Identifikationsnummer ergibt sich als Key der HashMap.
      */
-    private ArrayList<Component> components = new ArrayList<>();
+    private HashMap<Integer, Component> components = new HashMap<>();
+
+    @Getter
+    private int nextId = 1;
     @Getter
     private boolean running = false;
 
@@ -51,9 +53,9 @@ public class RuntimeEnvironment {
                     Component component = null;
                     try {
                         component = new Component(file);
-                        components.add(component);
+                        components.put(nextId++, component);
                     } catch (MalformedURLException e) {
-                        LOGGER.log(Level.SEVERE, "Komponente mit dem Dateinamen \"" + file.getName() +
+                        LOGGER.sendLog(Level.SEVERE, "Komponente mit dem Dateinamen \"" + file.getName() +
                                 "\" konnte nicht geladen werden aufgrund eines Fehlers: Siehe folgende Fehlermeldung: ", e);
                     }
         });
@@ -68,7 +70,7 @@ public class RuntimeEnvironment {
             return;
         }
 
-        List<String> compNames = components.stream().map(Component::getName).toList();
+        List<String> compNames = components.values().stream().map(Component::getName).toList();
         StringBuilder addedComponents = new StringBuilder();
 
         Arrays.stream(Objects.requireNonNull(compDir.toFile().listFiles()))
@@ -78,10 +80,10 @@ public class RuntimeEnvironment {
                     Component component;
                     try {
                         component = new Component(file);
-                        components.add(component);
+                        components.put(nextId++, component);
                         addedComponents.append(component.getName()).append("  ");
                     } catch (MalformedURLException e) {
-                        LOGGER.log(Level.SEVERE, "Komponente mit dem Dateinamen \"" + file.getName() +
+                        LOGGER.sendLog(Level.SEVERE, "Komponente mit dem Dateinamen \"" + file.getName() +
                                 "\" konnte nicht geladen werden aufgrund eines Fehlers: Siehe folgende Fehlermeldung: ", e);
                     }
                 });
@@ -101,18 +103,18 @@ public class RuntimeEnvironment {
             id = components.size();
             try {
                 component = new Component(component);
-                components.add(component);
+                components.put(nextId++, component);
             } catch (Exception e) {
                 LOGGER.info("Die Komponente \"" + components.get(id).getName() + "\" mit der ID " + id + " konnte nicht erneut deployt werden.");
             }
         }
 
         try {
-            components.get(id).deploy(this);
+            components.get(id).deploy(this, id);
             LOGGER.info("Die Komponente \"" + components.get(id).getName() + "\" mit der ID " + id + " wurde erfolgreich deployt.");
             return true;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Beim Deployen der Komponente \"" + components.get(id).getName() +
+            LOGGER.sendLog(Level.SEVERE, "Beim Deployen der Komponente \"" + components.get(id).getName() +
                     "\" mit der ID " + id + " ist ein Fehler aufgetreten. Siehe folgende Fehlermeldung: ", e);
             return false;
         }
@@ -138,7 +140,7 @@ public class RuntimeEnvironment {
                     " konnte erfolgreich gestartet werden.");
             return true;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Beim Starten der Komponente \"" + components.get(id).getName() +
+            LOGGER.sendLog(Level.SEVERE, "Beim Starten der Komponente \"" + components.get(id).getName() +
                     "\" mit der ID " + id + " ist ein Fehler aufgetreten. Siehe folgende Fehlermeldung: ", e);
             return false;
         }
@@ -170,7 +172,7 @@ public class RuntimeEnvironment {
                     " konnte erfolgreich gestoppt werden.");
             return true;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Beim Stoppen der Komponente \"" + components.get(id).getName() +
+            LOGGER.sendLog(Level.SEVERE, "Beim Stoppen der Komponente \"" + components.get(id).getName() +
                     "\" mit der ID " + id + " ist ein Fehler aufgetreten. Siehe folgende Fehlermeldung: ", e);
             return false;
         }

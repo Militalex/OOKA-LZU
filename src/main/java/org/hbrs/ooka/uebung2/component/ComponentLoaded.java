@@ -1,10 +1,8 @@
 package org.hbrs.ooka.uebung2.component;
 
-import org.hbrs.ooka.uebung2.annotations.Port;
-import org.hbrs.ooka.uebung2.annotations.Start;
-import org.hbrs.ooka.uebung2.annotations.Stop;
-import org.hbrs.ooka.uebung2.runtimeEnvironment.IRuntimeEnvironmentAPI;
 import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2.services.logger.ComponentLogger;
+import org.hbrs.ooka.uebung3.annotations.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
@@ -16,7 +14,7 @@ import java.util.jar.JarFile;
 public class ComponentLoaded extends AbstractComponentState {
 
     @Override
-    public @Nullable Method[] deploy(Component component, RuntimeEnvironment re) throws Exception{
+    public @Nullable Method[] deploy(Component component, RuntimeEnvironment re, int id) throws Exception{
         Enumeration<JarEntry> entryEnumeration = new JarFile(component.getJarFile()).entries();
         Method[] methods = null;
 
@@ -40,12 +38,17 @@ public class ComponentLoaded extends AbstractComponentState {
                 }
                 else {
                     methods = startAndStopMethods;
-                    // Set API
-                    Arrays.stream(clazz.getFields()).filter(field -> field.getType().equals(IRuntimeEnvironmentAPI.class)).forEach(field -> {
+
+                    // Inject
+                    Arrays.stream(clazz.getFields()).filter(field -> field.isAnnotationPresent(Inject.class)).forEach(field -> {
+                        field.setAccessible(true);
+
                         try {
-                            field.setAccessible(true);
-                            field.set(null, re.getApi());
-                        } catch (IllegalAccessException e) {
+                            switch (field.getAnnotation(Inject.class).injectType()) {
+                                case RUNTIME_ENVIRONMENT -> field.set(null, re.getApi());
+                                case LOGGER -> field.set(null, new ComponentLogger(component, id));
+                            }
+                        } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
                     });

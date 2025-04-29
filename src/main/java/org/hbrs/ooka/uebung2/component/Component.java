@@ -3,24 +3,16 @@ package org.hbrs.ooka.uebung2.component;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
-import org.hbrs.ooka.uebung2.runtimeEnvironment.IRuntimeEnvironmentAPI;
 import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
-import org.hbrs.ooka.uebung2.annotations.Port;
-import org.hbrs.ooka.uebung2.annotations.Start;
-import org.hbrs.ooka.uebung2.annotations.Stop;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.Objects;
 
 @Getter(AccessLevel.PACKAGE)
 public class Component {
@@ -60,8 +52,8 @@ public class Component {
         return jarFile.getName().substring(0, jarFile.getName().length() - 4);
     }
 
-    public void deploy(RuntimeEnvironment re) throws Exception {
-        Method[] methods = componentState.deploy(this, re);
+    public void deploy(RuntimeEnvironment re, int id) throws Exception {
+        Method[] methods = componentState.deploy(this, re, id);
         if (methods != null){
             startMethod = methods[0];
             stopMethod = methods[1];

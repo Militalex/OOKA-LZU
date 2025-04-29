@@ -22,5 +22,7 @@ public abstract class AbstractComponentState {
         throw new ComponentStateUnsuportedOperationException("Deleting is not supported in State " + getState());
     }
 
+    public abstract @Nullable Method[] deploy(Component component, RuntimeEnvironment re, int id) throws Exception;
+
     public abstract ComponentState getState();
 }
