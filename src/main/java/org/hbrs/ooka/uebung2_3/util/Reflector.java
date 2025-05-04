@@ -1,4 +1,4 @@
-package org.hbrs.ooka.uebung2.util;
+package org.hbrs.ooka.uebung2_3.util;
 
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;

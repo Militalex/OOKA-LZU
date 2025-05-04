@@ -1,7 +1,7 @@
-package org.hbrs.ooka.uebung2;
+package org.hbrs.ooka.uebung2_3;
 
-import org.hbrs.ooka.uebung2.component.Component;
-import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2_3.component.Component;
+import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;

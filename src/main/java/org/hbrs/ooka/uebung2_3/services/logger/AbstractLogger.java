@@ -1,7 +1,5 @@
-package org.hbrs.ooka.uebung2.services.logger;
+package org.hbrs.ooka.uebung2_3.services.logger;
 
-import org.hbrs.ooka.uebung2.util.LoggerUtil;
-import org.hbrs.ooka.uebung3.loggerService.ILogger;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;

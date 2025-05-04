@@ -1,4 +1,4 @@
-import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 
 public class TestMain {
     public static void main(String[] args) throws InterruptedException {

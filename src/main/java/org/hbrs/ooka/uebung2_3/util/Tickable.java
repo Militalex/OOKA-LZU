@@ -1,4 +1,4 @@
-package org.hbrs.ooka.uebung2.util;
+package org.hbrs.ooka.uebung2_3.util;
 
 import java.util.Timer;
 import java.util.TimerTask;

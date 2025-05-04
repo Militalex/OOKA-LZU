@@ -1,9 +1,9 @@
-package org.hbrs.ooka.uebung2.component;
+package org.hbrs.ooka.uebung2_3.component;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,10 +1,10 @@
-package org.hbrs.ooka.uebung2.runtimeEnvironment;
+package org.hbrs.ooka.uebung2_3.runtimeEnvironment;
 
 import lombok.Getter;
-import org.hbrs.ooka.uebung2.component.Component;
-import org.hbrs.ooka.uebung2.component.ComponentState;
-import org.hbrs.ooka.uebung2.services.logger.RuntimeEnvironmentLogger;
-import org.hbrs.ooka.uebung3.loggerService.ILogger;
+import org.hbrs.ooka.uebung2_3.component.Component;
+import org.hbrs.ooka.uebung2_3.component.ComponentState;
+import org.hbrs.ooka.uebung2_3.services.logger.ILogger;
+import org.hbrs.ooka.uebung2_3.services.logger.RuntimeEnvironmentLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
@@ -91,7 +91,7 @@ public class RuntimeEnvironment {
 
     // Folgende Methoden geben zurück, ob sie erfolgreich waren oder nicht
     public boolean deployComponentById(int id){
-        if (components.containsKey(id)){
+        if (!components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -120,7 +120,7 @@ public class RuntimeEnvironment {
     }
 
     public boolean startComponentById(int id){
-        if (components.containsKey(id)){
+        if (!components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -161,7 +161,7 @@ public class RuntimeEnvironment {
     }
 
     public boolean stopComponentById(int id){
-        if (components.containsKey(id)){
+        if (!components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }
@@ -179,7 +179,7 @@ public class RuntimeEnvironment {
     }
 
     public boolean deleteComponentById(int id){
-        if (components.containsKey(id)){
+        if (!components.containsKey(id)){
             LOGGER.warning("Eine Komponente mit der ID " + id + " konnte nicht gefunden werden.");
             return false;
         }

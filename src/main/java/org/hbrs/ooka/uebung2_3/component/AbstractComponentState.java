@@ -1,6 +1,6 @@
-package org.hbrs.ooka.uebung2.component;
+package org.hbrs.ooka.uebung2_3.component;
 
-import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;

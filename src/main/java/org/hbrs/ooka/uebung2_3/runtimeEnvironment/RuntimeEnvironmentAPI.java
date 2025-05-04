@@ -1,7 +1,6 @@
-package org.hbrs.ooka.uebung2.runtimeEnvironment;
+package org.hbrs.ooka.uebung2_3.runtimeEnvironment;
 
-import org.hbrs.ooka.uebung2.component.Component;
-import org.hbrs.ooka.uebung3.runtimeEnvironment.IRuntimeEnvironmentAPI;
+import org.hbrs.ooka.uebung2_3.component.Component;
 
 import java.util.HashMap;
 

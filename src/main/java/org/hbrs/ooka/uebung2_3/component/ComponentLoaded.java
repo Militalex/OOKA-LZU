@@ -1,8 +1,9 @@
-package org.hbrs.ooka.uebung2.component;
+package org.hbrs.ooka.uebung2_3.component;
 
-import org.hbrs.ooka.uebung2.runtimeEnvironment.RuntimeEnvironment;
-import org.hbrs.ooka.uebung2.services.logger.ComponentLogger;
-import org.hbrs.ooka.uebung3.annotations.*;
+import org.hbrs.ooka.uebung2_3.annotations.Inject;
+import org.hbrs.ooka.uebung2_3.annotations.Stop;
+import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
+import org.hbrs.ooka.uebung2_3.services.logger.ComponentLogger;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
@@ -25,7 +26,7 @@ public class ComponentLoaded extends AbstractComponentState {
             final Class<?> clazz = component.getClassLoader().loadClass(className);
 
             // Calculate port class
-            if (clazz.isAnnotationPresent(Port.class)) {
+            if (clazz.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Port.class)) {
                 re.getApi().addPort(component, clazz.getDeclaredConstructor().newInstance());
             }
 
@@ -40,11 +41,11 @@ public class ComponentLoaded extends AbstractComponentState {
                     methods = startAndStopMethods;
 
                     // Inject
-                    Arrays.stream(clazz.getFields()).filter(field -> field.isAnnotationPresent(Inject.class)).forEach(field -> {
+                    Arrays.stream(clazz.getFields()).filter(field -> field.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Inject.class)).forEach(field -> {
                         field.setAccessible(true);
 
                         try {
-                            switch (field.getAnnotation(Inject.class).injectType()) {
+                            switch (field.getAnnotation(Inject.class).value()) {
                                 case RUNTIME_ENVIRONMENT -> field.set(null, re.getApi());
                                 case LOGGER -> field.set(null, new ComponentLogger(component, id));
                             }
@@ -64,7 +65,7 @@ public class ComponentLoaded extends AbstractComponentState {
         for (int i = 0; i < clazz.getMethods().length && (startMethod == null || stopMethod == null); i++) {
             Method method = clazz.getMethods()[i];
 
-            if (method.isAnnotationPresent(Start.class)) {
+            if (method.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Start.class)) {
                 if (startMethod != null) {
                     RuntimeEnvironment.LOGGER.severe("Mehr als eine Startmethode in der Komponente " + component.getName() + " gefunden.");
                     return null;

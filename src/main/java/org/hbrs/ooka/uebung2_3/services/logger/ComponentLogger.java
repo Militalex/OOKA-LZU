@@ -1,6 +1,6 @@
-package org.hbrs.ooka.uebung2.services.logger;
+package org.hbrs.ooka.uebung2_3.services.logger;
 
-import org.hbrs.ooka.uebung2.component.Component;
+import org.hbrs.ooka.uebung2_3.component.Component;
 
 public final class ComponentLogger extends AbstractLogger{
     public ComponentLogger(Component component, int id) {

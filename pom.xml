@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hbrs.ooka.uebung2</groupId>
-    <artifactId>OOKA_Laufzeitumgebung</artifactId>
+    <artifactId>RuntimeEnvironment</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -38,5 +38,31 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <executions>
+                    <execution>
+                        <id>library-jar</id>
+                        <phase>compile</phase>
+                        <goals><goal>jar</goal></goals>
+                        <configuration>
+                            <classifier>LIBRARY</classifier>
+                            <finalName>${project.artifactId}</finalName>
+                            <outputDirectory>${project.basedir}/jars</outputDirectory>
+                            <includes>
+                                <include>org/hbrs/ooka/uebung2_3/annotations/**</include>
+                                <include>org/hbrs/ooka/uebung2_3/runtimeEnvironment/IRuntimeEnvironmentAPI.class</include>
+                                <include>org/hbrs/ooka/uebung2_3/services/logger/ILogger.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

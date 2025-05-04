@@ -1,4 +1,4 @@
-package org.hbrs.ooka.uebung2.component;
+package org.hbrs.ooka.uebung2_3.component;
 
 import java.lang.reflect.Method;
 
