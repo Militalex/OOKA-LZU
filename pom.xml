@@ -37,6 +37,22 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.hbrs.ooka</groupId>
+            <artifactId>ProduktManagement-LIBRARY</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/ProduktManagement-LIBRARY.jar</systemPath>
+        </dependency>
+        -->
+
     </dependencies>
 
     <build>

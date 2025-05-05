@@ -15,8 +15,7 @@ public class RuntimeEnvironmentTest {
 
     @Test
     public void separateClassLoaderTest() throws Exception {
-        Path path = Paths.get("comps/ProduktManagement Komponente.jar");
-        Component component1 = new Component(path.toFile());
+        Component component1 = new Component("comps/ProduktManagementSimulation-COMPONENT.jar");
         Component component2 = new Component(component1);
 
         Constructor<?> constructor1 = component1.getClassLoader().loadClass("org.hbrs.ooka.uebung1.component.Product")
@@ -41,20 +40,20 @@ public class RuntimeEnvironmentTest {
 
     @Test
     public void roundTripTest() throws Exception {
-        // Bei ClassNotFound Errors die ProduktManagement Komponente in den classpath kopieren
-        RuntimeEnvironment re = new RuntimeEnvironment("comps");
+        RuntimeEnvironment re = new RuntimeEnvironment();
         re.start();
+        re.loadAllComponents("comps");
 
         re.listComponents();
 
+        re.deployComponentById(0);
         re.deployComponentById(1);
-        re.deployComponentById(0);
-        re.deployComponentById(0);
+        re.deployComponentById(1);
 
         re.listComponents();
 
-        re.startComponentById(1);
         re.startComponentById(0);
+        re.startComponentById(1);
 
         Thread.sleep(500);
 
@@ -62,6 +61,13 @@ public class RuntimeEnvironmentTest {
 
         Thread.sleep(5000);
 
+        re.shutdown();
+
+        System.out.println("-----------------");
+
+        re.start();
+        re.loadConfig("config/LZU-config.json");
+        re.listComponents();
         re.shutdown();
     }
 }

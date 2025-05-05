@@ -14,7 +14,7 @@ public abstract class AbstractComponentState {
         throw new ComponentStateUnsuportedOperationException("Starting is not supported in State " + getState());
     }
 
-    public void stop(Component component) throws Exception{
+    public void stop(Component component, Thread thread) throws Exception{
         throw new ComponentStateUnsuportedOperationException("Stopping is not supported in State " + getState());
     }
 

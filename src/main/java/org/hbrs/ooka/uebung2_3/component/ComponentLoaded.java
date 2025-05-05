@@ -1,6 +1,7 @@
 package org.hbrs.ooka.uebung2_3.component;
 
 import org.hbrs.ooka.uebung2_3.annotations.Inject;
+import org.hbrs.ooka.uebung2_3.annotations.StartClass;
 import org.hbrs.ooka.uebung2_3.annotations.Stop;
 import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 import org.hbrs.ooka.uebung2_3.services.logger.ComponentLogger;
@@ -17,7 +18,6 @@ public class ComponentLoaded extends AbstractComponentState {
     @Override
     public @Nullable Method[] deploy(Component component, RuntimeEnvironment re, int id) throws Exception{
         Enumeration<JarEntry> entryEnumeration = new JarFile(component.getJarFile()).entries();
-        Method[] methods = null;
 
         while (entryEnumeration.hasMoreElements()) {
             JarEntry entry = entryEnumeration.nextElement();
@@ -25,38 +25,43 @@ public class ComponentLoaded extends AbstractComponentState {
             String className = entry.getName().replace("/", ".").substring(0, entry.getName().length() - 6);
             final Class<?> clazz = component.getClassLoader().loadClass(className);
 
-            // Calculate port class
+            // Calculate Port class
             if (clazz.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Port.class)) {
                 re.getApi().addPort(component, clazz.getDeclaredConstructor().newInstance());
             }
 
-            // Calculate start and stop methods
-            Method[] startAndStopMethods = getStartAndStopMethodsIfPresent(component, clazz);
-            if (startAndStopMethods != null) {
-                if (methods != null) {
-                    RuntimeEnvironment.LOGGER.warning("Mehr als eine Startklasse in der Komponente " + component.getName() +
-                            " gefunden. Belasse zuletzt gefundene Startklasse " + clazz.getName());
+            // Calculate Start class
+            if (clazz.isAnnotationPresent(StartClass.class)) {
+                // Calculate start and stop methods
+                Method[] startAndStopMethods = getStartAndStopMethodsIfPresent(component, clazz);
+
+                if (startAndStopMethods == null) {
+                    RuntimeEnvironment.LOGGER.severe("Startmethode und/oder Stopmethode in der Startklasse "
+                            + className + " der Komponente " + component.getName() + " nicht gefunden.");
+                    return null;
                 }
-                else {
-                    methods = startAndStopMethods;
 
-                    // Inject
-                    Arrays.stream(clazz.getFields()).filter(field -> field.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Inject.class)).forEach(field -> {
-                        field.setAccessible(true);
-
-                        try {
-                            switch (field.getAnnotation(Inject.class).value()) {
-                                case RUNTIME_ENVIRONMENT -> field.set(null, re.getApi());
-                                case LOGGER -> field.set(null, new ComponentLogger(component, id));
-                            }
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                // Inject
+                Arrays.stream(clazz.getDeclaredFields()).filter(field -> field.isAnnotationPresent(org.hbrs.ooka.uebung2_3.annotations.Inject.class)).forEach(field -> {
+                    field.setAccessible(true);
+                    try {
+                        switch (field.getAnnotation(Inject.class).value()) {
+                            case RUNTIME_ENVIRONMENT -> field.set(null, re.getApi());
+                            case LOGGER -> field.set(null, new ComponentLogger(component, id));
                         }
-                    });
-                }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                return startAndStopMethods;
             }
         }
-        return methods;
+        return null;
+    }
+
+    @Override
+    public void delete(Component component) {
+        component.setComponentState(new ComponentDeleted());
     }
 
     private @Nullable Method[] getStartAndStopMethodsIfPresent(Component component, Class<?> clazz){

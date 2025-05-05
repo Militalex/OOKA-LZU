@@ -2,7 +2,7 @@ import org.hbrs.ooka.uebung2_3.runtimeEnvironment.RuntimeEnvironment;
 
 public class TestMain {
     public static void main(String[] args) throws InterruptedException {
-        RuntimeEnvironment re = new RuntimeEnvironment("comps");
+        RuntimeEnvironment re = new RuntimeEnvironment();
         re.start();
 
         re.listComponents();

@@ -12,13 +12,17 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.Objects;
 
+@Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PACKAGE)
 public class Component {
 
     @Getter
     private final String name;
+    @Getter
+    private final String fullName;
     @NotNull
     protected final File jarFile;
     @NotNull @Getter
@@ -27,22 +31,26 @@ public class Component {
     protected Method startMethod;
     @Nullable
     protected Method stopMethod;
+    @Nullable
+    private Thread thread;
 
     @Setter(value = AccessLevel.PACKAGE)
     private AbstractComponentState componentState;
 
-    public Component(File jarFile) throws MalformedURLException {
-        if (!jarFile.getName().endsWith(".jar")){
-            throw new IllegalArgumentException(jarFile.getName() + " is not a jar file.");
+    public Component(String path) throws MalformedURLException {
+        File fileToJar = Paths.get(path).toFile();
+        if (!fileToJar.getName().endsWith(".jar")){
+            throw new IllegalArgumentException(fileToJar.getName() + " is not a jar file.");
         }
-        this.name = Component.getNameFromJarFile(jarFile);
-        this.jarFile = jarFile;
-        this.classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
+        this.name = Component.getNameFromJarFile(fileToJar);
+        this.fullName = path;
+        this.jarFile = fileToJar;
+        this.classLoader = new URLClassLoader(new URL[]{fileToJar.toURI().toURL()});
         componentState = new ComponentLoaded();
     }
 
     public Component(Component component) throws MalformedURLException {
-        this(component.jarFile);
+        this(component.fullName);
     }
 
     public static String getNameFromJarFile(File jarFile){
@@ -67,7 +75,7 @@ public class Component {
     }
 
     public void stop() throws Exception{
-        componentState.stop(this);
+        componentState.stop(this, thread);
         componentState = new ComponentStopped();
     }
 

@@ -9,8 +9,21 @@ public class ComponentDeployed extends AbstractComponentState {
         Method startMethod = component.getStartMethod();
         if (startMethod != null) {
             startMethod.setAccessible(true);
-            startMethod.invoke(null);
+            Thread thread = new Thread(() -> {
+                try {
+                    startMethod.invoke(null);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            thread.start();
+            component.setThread(thread);
         }
+    }
+
+    @Override
+    public void delete(Component component) {
+        component.setComponentState(new ComponentDeleted());
     }
 
     @Override

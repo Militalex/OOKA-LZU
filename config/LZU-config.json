@@ -1,0 +1,12 @@
+{
+  "components": [
+    "comps/ProduktManagementSimulation-COMPONENT.jar",
+    "comps/TickerSimulation-COMPONENT.jar",
+    "comps/TickerSimulation-COMPONENT.jar"
+  ],
+  "loadedOrDeployed": [
+    "DEPLOYED",
+    "DEPLOYED",
+    "DEPLOYED"
+  ]
+}
